@@ -1,0 +1,27 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: "traefik:v2.3.2"
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker
+      - --api.insecure
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  my-service:
+    image: traefik/whoami
+    labels: 
+      - "traefik.enable=true"
+      - "traefik.http.routers.my-router.rule=Host(`localhost`)"
+      - "traefik.http.routers.my-router.entrypoints=web" 
+      # Adds buffering middleware to limit requests by size
+      - "traefik.http.routers.my-router.middlewares=my-limit"
+      # Max Request Body limit is 100 Bytes
+      - "traefik.http.middlewares.my-limit.buffering.maxRequestBodyBytes=100"
+      # Max Response Body limit is 1000 Bytes
+      - "traefik.http.middlewares.my-limit.buffering.maxResponseBodyBytes=1000"

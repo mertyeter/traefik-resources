@@ -1,0 +1,26 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: "traefik:v2.3.2"
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker
+      - --api.insecure
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  my-service:
+    image: traefik/whoami
+    labels: 
+      - "traefik.enable=true"
+      - "traefik.http.routers.my-router.rule=Host(`localhost`)"
+      - "traefik.http.routers.my-router.entrypoints=web" 
+      # Enables basic authentication; use htpasswd to generate the passwords.
+      - "traefik.http.routers.my-router.middlewares=my-auth"
+      # Username: mert 
+      # Password: mert
+      - "traefik.http.middlewares.my-auth.basicauth.users=mert:$$apr1$$ntBMSP5l$$.AFKylsN.z1ed86GPzT3R/" 
