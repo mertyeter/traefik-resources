@@ -19,7 +19,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.my-router.rule=Host(`localhost`)"
       - "traefik.http.routers.my-router.entrypoints=web"
-      # Adds 'add prefix' middleware      
-      - "traefik.http.routers.my-router.middlewares=my-prefix"
-      # Adds the prefix /v1
-      - "traefik.http.middlewares.my-prefix.addprefix.prefix=/v1"
+      # Adds in-flight requests middleware
+      - "traefik.http.routers.my-router.middlewares=my-inflightrequests"
+      # Sets maximum amount of allowed simultaneous in-flight request to 5
+      - "traefik.http.middlewares.my-inflightrequests.inflightreq.amount=5"

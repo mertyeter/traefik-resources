@@ -19,7 +19,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.my-router.rule=Host(`localhost`)"
       - "traefik.http.routers.my-router.entrypoints=web"
-      # Adds 'add prefix' middleware      
-      - "traefik.http.routers.my-router.middlewares=my-prefix"
-      # Adds the prefix /v1
-      - "traefik.http.middlewares.my-prefix.addprefix.prefix=/v1"
+      # Adds replace path regex middleware
+      - "traefik.http.routers.my-router.middlewares=my-path"
+      # Replaces the path 'mert/' with 'traefik/'
+      - "traefik.http.middlewares.my-path.replacepathregex.regex=^/mert/(.*)"
+      - "traefik.http.middlewares.my-path.replacepathregex.replacement=/traefik/$$1"

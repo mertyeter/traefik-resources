@@ -19,7 +19,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.my-router.rule=Host(`localhost`)"
       - "traefik.http.routers.my-router.entrypoints=web"
-      # Adds 'add prefix' middleware      
-      - "traefik.http.routers.my-router.middlewares=my-prefix"
-      # Adds the prefix /v1
-      - "traefik.http.middlewares.my-prefix.addprefix.prefix=/v1"
+      # Adds IP whitelist middleware
+      - "traefik.http.routers.my-router.middlewares=my-allowedlist"
+      # Accepts request from specific ip address
+      - "traefik.http.middlewares.my-allowedlist.ipwhitelist.sourcerange=172.29.0.1"

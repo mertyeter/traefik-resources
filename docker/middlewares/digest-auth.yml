@@ -15,11 +15,13 @@ services:
 
   my-service:
     image: traefik/whoami
-    labels:
+    labels: 
       - "traefik.enable=true"
       - "traefik.http.routers.my-router.rule=Host(`localhost`)"
       - "traefik.http.routers.my-router.entrypoints=web"
-      # Adds 'add prefix' middleware      
-      - "traefik.http.routers.my-router.middlewares=my-prefix"
-      # Adds the prefix /v1
-      - "traefik.http.middlewares.my-prefix.addprefix.prefix=/v1"
+      # Enables digests authentication; use htdigest to generate the passwords.
+      - "traefik.http.routers.my-router.middlewares=my-auth"
+      # Username: mert 
+      # Realm: traefik
+      # Password: mert
+      - "traefik.http.middlewares.my-auth.digestauth.users=mert:traefik:05eccdeda94d284d63ef8eed837d55c6" 

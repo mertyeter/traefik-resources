@@ -19,7 +19,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.my-router.rule=Host(`localhost`)"
       - "traefik.http.routers.my-router.entrypoints=web"
-      # Adds 'add prefix' middleware      
+      # Adds strip prefix middleware
       - "traefik.http.routers.my-router.middlewares=my-prefix"
-      # Adds the prefix /v1
-      - "traefik.http.middlewares.my-prefix.addprefix.prefix=/v1"
+      # Strips the prefix /v1
+      - "traefik.http.middlewares.my-prefix.stripprefix.prefixes=/v1"
+      # Ensures the resulting stripped path is not the empty string, by replacing it with / when necessary.
+      - "traefik.http.middlewares.my-prefix.stripprefix.forceSlash=true"

@@ -19,7 +19,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.my-router.rule=Host(`localhost`)"
       - "traefik.http.routers.my-router.entrypoints=web"
-      # Adds rate limit
+      # Adds rate limit middleware
       - "traefik.http.routers.my-router.middlewares=my-limit"
       # Allows 2 reqs in 5 seconds
       - "traefik.http.middlewares.my-limit.ratelimit.average=2"

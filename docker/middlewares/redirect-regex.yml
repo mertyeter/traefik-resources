@@ -15,11 +15,12 @@ services:
 
   my-service:
     image: traefik/whoami
-    labels:
+    labels: 
       - "traefik.enable=true"
       - "traefik.http.routers.my-router.rule=Host(`localhost`)"
       - "traefik.http.routers.my-router.entrypoints=web"
-      # Adds 'add prefix' middleware      
-      - "traefik.http.routers.my-router.middlewares=my-prefix"
-      # Adds the prefix /v1
-      - "traefik.http.middlewares.my-prefix.addprefix.prefix=/v1"
+      # Adds redirect regex middleware
+      - "traefik.http.routers.my-router.middlewares=my-redirect"
+      # Redirects with domain replacement, http://localhost to https://doc.traefik.io/middlewares
+      - "traefik.http.middlewares.my-redirect.redirectregex.regex=^http://localhost/(.*)"
+      - "traefik.http.middlewares.my-redirect.redirectregex.replacement=https://doc.traefik.io/traefik/middlewares/$${1}"

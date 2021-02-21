@@ -1,0 +1,41 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: "traefik:v2.4.5"
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker
+      - --api.insecure
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  my-service:
+    image: traefik/whoami
+    labels: 
+      - "traefik.enable=true"
+      - "traefik.http.routers.my-router.rule=Host(`localhost`)"
+      - "traefik.http.routers.my-router.entrypoints=web"      
+      - "traefik.http.routers.my-router.middlewares=my-chain"
+    # Adds middlewares to chain
+      - "traefik.http.middlewares.my-chain.chain.middlewares=my-errorpages,my-limit"
+    # Allows 2 reqs in 5 seconds
+      - "traefik.http.middlewares.my-limit.ratelimit.average=2"
+      - "traefik.http.middlewares.my-limit.ratelimit.period=5s"
+    # Custom error pages
+      - "traefik.http.middlewares.my-errorpages.errors.status=400-599"
+      - "traefik.http.middlewares.my-errorpages.errors.service=error"
+      - "traefik.http.middlewares.my-errorpages.errors.query=/{status}.html"
+
+# Error page service
+  errorpages-service:
+    image: guillaumebriday/traefik-custom-error-pages
+    labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.error.rule=Host(`errorpages.localhost`)"
+          - "traefik.http.routers.error.service=error"
+          - "traefik.http.services.error.loadbalancer.server.port=80"
+          - "traefik.http.routers.error.entrypoints=web"

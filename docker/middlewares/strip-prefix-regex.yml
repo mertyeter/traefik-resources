@@ -19,7 +19,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.my-router.rule=Host(`localhost`)"
       - "traefik.http.routers.my-router.entrypoints=web"
-      # Adds 'add prefix' middleware      
+      # Adds strip prefix regex middleware
       - "traefik.http.routers.my-router.middlewares=my-prefix"
-      # Adds the prefix /v1
-      - "traefik.http.middlewares.my-prefix.addprefix.prefix=/v1"
+      # Strips the matching path prefix and stores it in a X-Forwarded-Prefix header.
+      - "traefik.http.middlewares.my-prefix.stripprefixregex.regex=/mert/[0-9]+/"
