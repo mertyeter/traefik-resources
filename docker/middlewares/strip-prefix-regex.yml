@@ -22,4 +22,4 @@ services:
       # Adds strip prefix regex middleware
       - "traefik.http.routers.my-router.middlewares=my-prefix"
       # Strips the matching path prefix and stores it in a X-Forwarded-Prefix header.
-      - "traefik.http.middlewares.my-prefix.stripprefixregex.regex=/mert/[0-9]+/"
+      - "traefik.http.middlewares.my-prefix.stripprefixregex.regex=/[0-9]+/"
